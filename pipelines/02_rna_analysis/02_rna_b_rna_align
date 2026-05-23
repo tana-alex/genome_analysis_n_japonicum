@@ -1,0 +1,54 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2026-1-61
+#SBATCH -p pelle
+#SBATCH -c 2
+#SBATCH -t 06:00:00
+#SBATCH -J rna_align_tapi0666
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x.%j.out
+# Load modules
+module load HISAT2
+module load SAMtools
+# Your commands
+
+# Control samples
+# Define sample arrays
+CONTROL_SAMPLES=("Control_1" "Control_2" "Control_3")
+CONTROL_SAMPLES=("Control_3")
+HEAT_SAMPLES=("Heat_treated_1" "Heat_treated_2" "Heat_treated_3")
+HEAT_SAMPLES=()
+
+BASE_PATH="/proj/uppmax2026-1-61/Genome_Analysis/2_Zhou_2023/reads/transcriptomic_data"
+
+# Align control samples
+for i in {3..3}; do
+    sample="Control_${i}"
+    echo "Aligning ${sample}..."
+    hisat2 -x hisat2_index/moss_index \
+           -1 ${BASE_PATH}/Control_${i}_f1.fq.gz \
+           -2 ${BASE_PATH}/Control_${i}_r2.fq.gz \
+	  --threads 2 | \
+	samtools sort -@ 2 -o ${sample}.bam -
+    samtools index ${sample}.bam
+done
+
+# Align heat treated samples
+for i in {0..0}; do
+    sample="Heat_treated_${i}"
+    echo "Aligning ${sample}..."
+    hisat2 -x hisat2_index/moss_index \
+           -1 ${BASE_PATH}/Heat_treated_42_12h_${i}_f1.fq.gz \
+           -2 ${BASE_PATH}/Heat_treated_42_12h_${i}_r2.fq.gz \
+ 	   --threads 2 | \
+        samtools sort -@ 2 -o ${sample}.bam -
+    samtools index ${sample}.bam
+
+    echo "${sample} completed."
+done
+
+
+
+echo "Step 4: Verifying BAM files..."
+ls -la *.bam *.bai
+
+echo "RNA alignment pipeline completed!"

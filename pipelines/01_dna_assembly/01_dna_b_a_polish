@@ -1,0 +1,27 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2026-1-61
+#SBATCH -p pelle
+#SBATCH -c 2
+#SBATCH -t 06:00:00
+#SBATCH -J a_polish_tapi0666
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x.%j.out
+# Load modules
+module load Pilon
+module load BWA
+module load SAMtools
+# Your commands
+
+bwa index lr_flye_output/assembly.fasta
+samtools faidx lr_flye_output/assembly.fasta
+bwa mem -t 2 lr_flye_output/assembly.fasta sr_trimm_out/R1_paired.fastq.gz sr_trimm_out/R2_paired.fastq.gz | samtools sort -@ 2 -o polishing/aligned.bam
+samtools index polishing/aligned.bam
+
+pilon \
+    --genome lr_flye_output/assembly.fasta \
+    --frags polishing/aligned.bam \
+    --output polished \
+    --outdir pilon_output \
+    --threads 2 \
+    --changes \
+    --vcf

@@ -1,0 +1,35 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2026-1-61
+#SBATCH -p pelle
+#SBATCH -c 2
+#SBATCH -t 06:00:00
+#SBATCH -J a_repeats_tapi0666
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x.%j.out
+# Load modules
+module load RepeatMasker
+module load RepeatModeler
+# Your commands
+
+#RepeatMasker -species viridiplantae \
+#             -pa 2 \
+#             -gff \
+#             -xsmall \
+#             -html \
+#             -dir repeatmasker_output \
+#             pilon_output/polished.fasta
+
+#RepeatMasker -species "Embryophyta" -pa 2 -gff -dir rm_embryophyta pilon_output/polished.fasta
+
+
+#RepeatMasker -pa 2 -gff -dir rm_no_species pilon_output/polished.fasta
+
+
+#BuildDatabase -name moss_repeats pilon_output/polished.fasta
+#RepeatModeler -database moss_repeats -threads 2 -LTRStruct -LTRStruct -engine ncbi
+#RepeatMasker -lib moss_repeats-families.fa
+
+RepeatMasker -lib RM_488447.MonMay41406592026/consensi.fa \
+             -pa 2 -xsmall -gff \
+             -dir rm_custom_107families \
+             pilon_output/polished.fasta

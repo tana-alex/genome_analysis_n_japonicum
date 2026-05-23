@@ -1,0 +1,14 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2026-1-61
+#SBATCH -p pelle
+#SBATCH -c 2
+#SBATCH -t 00:50:00
+#SBATCH -J filt_lr_tapi0666
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x.%j.out
+# Load modules
+module load NanoFilt
+module load pigz
+# Your commands
+pigz -dc -p 2 /proj/uppmax2026-1-61/Genome_Analysis/2_Zhou_2023/reads/genomics_chr3_data/chr3_clean_nanopore.fq.gz \
+    | NanoFilt -q 10 -l 500 --headcrop 50 | pigz -p 2 > lr_filtered.fastq.gz

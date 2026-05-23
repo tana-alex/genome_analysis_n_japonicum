@@ -1,0 +1,18 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2026-1-61
+#SBATCH -p pelle
+#SBATCH -c 2
+#SBATCH -t 00:30:00
+#SBATCH -J b_rnac1_trim_tapi0666
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x.%j.out
+# Load modules
+module load Trimmomatic
+# Your commands
+trimmomatic PE -threads 2  \
+   /proj/uppmax2026-1-61/Genome_Analysis/2_Zhou_2023/reads/transcriptomic_data/Control_1_f1.fq.gz \
+   /proj/uppmax2026-1-61/Genome_Analysis/2_Zhou_2023/reads/transcriptomic_data/Control_1_r2.fq.gz \
+   rnac1_trimm_out/R1_paired.fastq.gz rnac1_trimm_out/R1_unpaired.fastq.gz \
+   rnac1_trimm_out/R2_paired.fastq.gz  rnac1_trimm_out/R2_unpaired.fastq.gz \
+   ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 \
+   SLIDINGWINDOW:4:15 MINLEN:36

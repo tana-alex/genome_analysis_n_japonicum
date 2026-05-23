@@ -1,0 +1,19 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2026-1-61
+#SBATCH -p pelle
+#SBATCH -c 2
+#SBATCH -t 12:00:00
+#SBATCH -J rna_featucount_tapi0666
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x.%j.out
+# Load modules
+module load Subread
+
+
+featureCounts -a braker_output/braker.gtf \
+              -o gene_counts.txt \
+              -T 2 \
+              -p \
+              -t exon \
+              -g gene_id \
+              Control_1.bam Control_2.bam Control_3.bam Heat_treated_1.bam Heat_treated_2.bam Heat_treated_3.bam

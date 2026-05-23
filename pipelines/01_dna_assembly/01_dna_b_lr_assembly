@@ -1,0 +1,17 @@
+#!/bin/bash -l
+#SBATCH --mem=32G
+#SBATCH -A uppmax2026-1-61
+#SBATCH -p pelle
+#SBATCH -c 2
+#SBATCH -t 12:00:00
+#SBATCH -J lr_flye_tapi0666
+#SBATCH --mail-type=ALL
+#SBATCH --output=%x.%j.out
+# Load modules
+module load Flye
+# Your commands
+flye --nano-raw lr_filtered.fastq.gz \
+     --genome-size 16m \
+     --out-dir lr_flye_output2/ \
+     --threads 2 \
+     --asm-coverage 50 \
